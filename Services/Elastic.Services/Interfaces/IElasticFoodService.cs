@@ -8,7 +8,7 @@ namespace Elastic.Services.Interfaces
 {
     public interface IElasticFoodService
     {
-        Task SaveFood(Food food);
+        Task<bool> SaveFood(Food food);
         Task<bool> GetFoodById(int id);
     }
 }

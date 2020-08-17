@@ -25,9 +25,34 @@ namespace Elastic.Services.Implementations
             return response.Found;
         }
 
-        public Task SaveFood(Food food)
+        public async Task<bool> SaveFood(Food food)
         {
-            return _elasticClient.IndexDocumentAsync<Food>(food);
+            var foodExists = await GetFoodById(food.Id);
+            var saved = false;
+
+            if(foodExists)
+            {
+                var updateResponse = await _elasticClient.UpdateAsync<Food>(food, u => u.Doc(food));
+                if(updateResponse.ApiCall.Success
+                    && updateResponse.ServerError is null
+                    && !string.IsNullOrWhiteSpace(updateResponse.Id))
+                {
+                    saved = true;
+                }
+            }
+            else
+            {
+                var savedResponse = await _elasticClient.IndexDocumentAsync<Food>(food);
+                if (savedResponse.ApiCall.Success
+                    && savedResponse.ServerError is null
+                    && !string.IsNullOrWhiteSpace(savedResponse.Id))
+                {
+                    saved = true;
+                }
+            }
+
+            return saved;
+
         }
     }
 }

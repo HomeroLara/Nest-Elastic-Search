@@ -34,8 +34,8 @@ namespace Elastic.Services.Controllers
         [HttpPut()]
         public async Task<IActionResult> SaveFood(Food food)
         {
-            await _elasticFoodService.SaveFood(food);
-            return Ok();
+            var saved = await _elasticFoodService.SaveFood(food);
+            return Ok(saved);
         }
     }
 }

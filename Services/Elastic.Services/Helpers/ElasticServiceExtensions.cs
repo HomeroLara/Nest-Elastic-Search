@@ -23,7 +23,14 @@ namespace Elastic.Services.Helpers
 
             services.AddSingleton<IElasticClient>(client);
 
-            CreateIndex(client, defaultIndex);
+            var indexExistsResult = client
+                .Indices
+                .Exists(new IndexExistsRequest(defaultIndex));
+
+            if (!indexExistsResult.Exists)
+            {
+                CreateIndex(client, defaultIndex);
+            }
         }
 
         private static void CreateIndex(IElasticClient client, string indexName)

@@ -21,6 +21,7 @@ namespace Elastic.Services.Helpers
 
             var client = new ElasticClient(settings);
 
+            //testing github codespaces...
             services.AddSingleton<IElasticClient>(client);
 
             var indexExistsResult = client
